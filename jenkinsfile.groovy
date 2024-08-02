@@ -16,16 +16,32 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/BasimAlmatboli/YT-hello-world.git'
             }
         }
-        stage('Build on AWS CodeBuild') {
+        
+        stage('Build with CodeBuild') {
             steps {
-                withAWS(region: "${AWS_REGION}", credentials: '99e62274-16c1-482c-b2e7-e575ee38fbb1') {
-                    script {
-                        def build = sh(script: "aws codebuild start-build --project-name ${CODEBUILD_PROJECT} --output json", returnStdout: true).trim()
-                        echo "CodeBuild response: ${build}"
-                    }
+                script {
+                    // Define variables
+                    def projectName = 'test'  // Replace with your CodeBuild project name
+                    def credentialsId = '99e62274-16c1-482c-b2e7-e575ee38fbb1'  // Replace with your Jenkins credentials ID
+                    def region = 'eu-north-1'  // Replace with your AWS region
+                    
+                    // Start the AWS CodeBuild project
+                    def result = awsCodeBuild(
+                        projectName: projectName,
+                        credentialsId: credentialsId,
+                        region: region,
+                        sourceControlType: 'jenkins'
+                    )
+                    
+                    // Optional: Print build details
+                    echo "Build ID: ${result.getBuildId()}"
+                    echo "Build ARN: ${result.getArn()}"
+                    echo "Artifacts Location: ${result.getArtifactsLocation()}"
                 }
             }
         }
+    
+
         stage('Upload to S3') {
             steps {
                 withAWS(region: "${AWS_REGION}", credentials: '99e62274-16c1-482c-b2e7-e575ee38fbb1') {

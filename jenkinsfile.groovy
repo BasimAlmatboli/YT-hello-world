@@ -31,7 +31,7 @@ pipeline {
                         credentialsId: credentialsId,
                         region: region,
                         credentialsType: 'jenkins',  // Use 'jenkins' for Jenkins credentials
-                        sourceControlType: 'jenkins'  // Ensure this matches your CodeBuild source control settings
+                        sourceControlType: 'github'  // Ensure this matches your CodeBuild source control settings
                     )
                     
                     // Optional: Print build details

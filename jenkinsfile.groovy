@@ -19,7 +19,10 @@ pipeline {
         stage('Build on AWS CodeBuild') {
             steps {
                 withAWS(region: "${AWS_REGION}", credentials: '99e62274-16c1-482c-b2e7-e575ee38fbb1') {
-                    sh "aws codebuild start-build --project-name ${CODEBUILD_PROJECT}"
+                    script {
+                        def build = sh(script: "aws codebuild start-build --project-name ${CODEBUILD_PROJECT} --output json", returnStdout: true).trim()
+                        echo "CodeBuild response: ${build}"
+                    }
                 }
             }
         }

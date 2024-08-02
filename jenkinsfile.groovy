@@ -30,7 +30,7 @@ pipeline {
                         projectName: projectName,
                         credentialsId: credentialsId,
                         region: region,
-                        sourceControlType: 'jenkins'
+                        credentialsType: 'jenkins'  // Ensure this is 'jenkins'
                     )
                     
                     // Optional: Print build details

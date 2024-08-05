@@ -19,7 +19,7 @@ pipeline {
         
         stage('Clean Up S3 Bucket') {
             steps {
-                withAWS(region: "${AWS_REGION}", credentials: '99e62274-16c1-482c-b2e7-e575ee38fbb1') {
+                withAWS(region: "${AWS_REGION}", credentials: '10d1d59f-ace4-44ed-8496-7998a8f7f71a') {
                     echo "Cleaning up S3 bucket: ${S3_BUCKET}"
                     sh "aws s3 ls s3://${S3_BUCKET}"  // List contents before deletion for verification
                     sh "aws s3 rm s3://${S3_BUCKET} --recursive"
@@ -54,7 +54,7 @@ pipeline {
 
          stage('Upload to S3') {
             steps {
-                withAWS(region: "${AWS_REGION}", credentials: '99e62274-16c1-482c-b2e7-e575ee38fbb1') {
+                withAWS(region: "${AWS_REGION}", credentials: '10d1d59f-ace4-44ed-8496-7998a8f7f71a') {
                     sh "aws s3 cp / s3://${S3_BUCKET}/ --recursive"
                 }
             }

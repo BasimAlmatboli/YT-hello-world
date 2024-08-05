@@ -25,8 +25,8 @@ pipeline {
                 }
             }
         }
-/* 
-        stage('Build with CodeBuild') {
+        
+        /* stage('Build with CodeBuild') {
             steps {
                 script {
                     // Define variables
@@ -49,20 +49,17 @@ pipeline {
                     echo "Artifacts Location: ${result.getArtifactsLocation()}"
                 }
             }
-        } */
+        }
 
-/* 
-        stage('Upload to S3') {
+         stage('Upload to S3') {
             steps {
                 withAWS(region: "${AWS_REGION}", credentials: '99e62274-16c1-482c-b2e7-e575ee38fbb1') {
                     sh "aws s3 cp / s3://${S3_BUCKET}/ --recursive"
                 }
             }
-        }
+        } */
     }
-     */
-
-
+    
     post {
         success {
             echo 'Pipeline executed successfully!'

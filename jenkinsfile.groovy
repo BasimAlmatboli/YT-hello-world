@@ -17,7 +17,7 @@ pipeline {
             }
         }
         
-        stage('Clean Up S3 Bucket') {
+        /* stage('Clean Up S3 Bucket') {
             steps {
                 withAWS(region: "${AWS_REGION}", credentials: '10d1d59f-ace4-44ed-8496-7998a8f7f71a') {
                     echo "Cleaning up S3 bucket: ${S3_BUCKET}"
@@ -50,7 +50,7 @@ pipeline {
                     echo "Artifacts Location: ${result.getArtifactsLocation()}"
                 }
             }
-        }
+        } */
 
         stage('Check S3 Bucket') {
             steps {
@@ -60,6 +60,7 @@ pipeline {
                         FILE_COUNT=$(aws s3 ls s3://${S3_BUCKET}/ --recursive | wc -l)
                         if [ $FILE_COUNT -gt 0 ]; then
                             echo "Files are uploaded to S3"
+                            echo "Number of files: $FILE_COUNT"
                             exit 0
                         else
                             echo "Failed to Upload to S3"
@@ -73,6 +74,7 @@ pipeline {
                 }
             }
         }
+
     
     }
     

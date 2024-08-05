@@ -21,6 +21,7 @@ pipeline {
             steps {
                 withAWS(region: "${AWS_REGION}", credentials: '99e62274-16c1-482c-b2e7-e575ee38fbb1') {
                     echo "Cleaning up S3 bucket: ${S3_BUCKET}"
+                    sh "aws s3 ls s3://${S3_BUCKET}"  // List contents before deletion for verification
                     sh "aws s3 rm s3://${S3_BUCKET} --recursive"
                 }
             }

@@ -17,6 +17,15 @@ pipeline {
             }
         }
         
+        stage('Clean Up S3 Bucket') {
+            steps {
+                withAWS(region: "${AWS_REGION}", credentials: '99e62274-16c1-482c-b2e7-e575ee38fbb1') {
+                    echo "Cleaning up S3 bucket: ${S3_BUCKET}"
+                    sh "aws s3 rm s3://${S3_BUCKET} --recursive"
+                }
+            }
+        }
+/* 
         stage('Build with CodeBuild') {
             steps {
                 script {
@@ -40,9 +49,9 @@ pipeline {
                     echo "Artifacts Location: ${result.getArtifactsLocation()}"
                 }
             }
-        }
-    
+        } */
 
+/* 
         stage('Upload to S3') {
             steps {
                 withAWS(region: "${AWS_REGION}", credentials: '99e62274-16c1-482c-b2e7-e575ee38fbb1') {
@@ -51,6 +60,9 @@ pipeline {
             }
         }
     }
+     */
+
+
     post {
         success {
             echo 'Pipeline executed successfully!'

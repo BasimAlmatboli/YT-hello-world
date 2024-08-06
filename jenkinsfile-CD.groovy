@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         SSH_KEY = credentials('78c238e3-0e4f-4ce2-8acd-cfdc3c4f68ca')
-        S3_BUCKET = 'your-s3-bucket-name'
-        DESTINATION_FOLDER = '/path/to/destination/folder'
-        EC2_INSTANCE_PRIVATE_IP = 'EC2-Private-IP-Address'
+        S3_BUCKET = credentials('S3_BUCKET')
+        DESTINATION_FOLDER = credentials('destination-folder')
+        EC2_INSTANCE_PRIVATE_IP = credentials('EC2-Private-IP-Address')
     }
 
     stages {
@@ -16,7 +16,7 @@ pipeline {
                         sshagent(['78c238e3-0e4f-4ce2-8acd-cfdc3c4f68ca']) {
                             sh """
                                 ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
-                                'rm -rf ${DESTINATION_FOLDER}/*'
+                                'sudo rm -rf ${DESTINATION_FOLDER}/*'
                             """
                         }
                         echo 'Destination folder cleaned successfully.'
@@ -27,6 +27,7 @@ pipeline {
                 }
             }
         }
+
         /*
         stage('Copy Data from S3') {
             steps {
@@ -54,7 +55,7 @@ pipeline {
                         sshagent(['78c238e3-0e4f-4ce2-8acd-cfdc3c4f68ca']) {
                             sh """
                                 ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
-                                'pm2 restart all'
+                                'sudo pm2 restart all'
                             """
                         }
                         echo 'Process restarted successfully with PM2.'

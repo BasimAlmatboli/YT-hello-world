@@ -1,3 +1,4 @@
+
 version: 0.2
 phases:
   install:
@@ -18,3 +19,4 @@ phases:
 artifacts:
   files:
     - target/hello-world-war-1.0.0.war
+  discard-paths: yes 

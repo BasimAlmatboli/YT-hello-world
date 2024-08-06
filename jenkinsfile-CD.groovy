@@ -14,10 +14,10 @@ pipeline {
                 script {
                     try {
                         sshagent(['78c238e3-0e4f-4ce2-8acd-cfdc3c4f68ca']) {
-                            sh '''
+                            sh """
                                 ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
                                 'sudo rm -rf ${DESTINATION_FOLDER}/*'
-                            '''
+                            """
                         }
                         echo 'Destination folder cleaned successfully.'
                     } catch (Exception e) {
@@ -28,6 +28,7 @@ pipeline {
             }
         }
 
+        // Uncomment the following stages when ready to use them.
         /*
         stage('Copy Data from S3') {
             steps {
@@ -65,11 +66,9 @@ pipeline {
                     }
                 }
             }
-        }*/
-
-
-        
-    } 
+        }
+        */
+    }
 
     post {
         failure {
@@ -80,4 +79,3 @@ pipeline {
         }
     }
 }
-

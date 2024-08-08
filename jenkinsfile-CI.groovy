@@ -6,9 +6,9 @@ pipeline {
     }
     
     environment {
-        AWS_REGION = "${env.AWS_REGION}"
-        S3_BUCKET = "${env.S3_BUCKET}"
-        CODEBUILD_PROJECT = "${env.CODEBUILD_PROJECT}"
+        AWS_REGION = credentials('AWS_REGION')
+        S3_BUCKET = credentials('S3_BUCKET')
+        CODEBUILD_PROJECT = credentials('CODEBUILD_PROJECT')
     }
     
     stages {

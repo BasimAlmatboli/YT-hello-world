@@ -2,18 +2,18 @@ pipeline {
     agent any
 
     environment {
-        SSH_KEY = credentials('78c238e3-0e4f-4ce2-8acd-cfdc3c4f68ca')
+        SSH_KEY = credentials('SSH_KEY')
         S3_BUCKET = credentials('S3_BUCKET')
         DESTINATION_FOLDER = credentials('destination-folder')
         EC2_INSTANCE_PRIVATE_IP = credentials('EC2-Private-IP-Address')
     }
-
+    
     stages {
         stage('Clean Destination Folder') {
             steps {
                 script {
                     try {
-                        sshagent(['78c238e3-0e4f-4ce2-8acd-cfdc3c4f68ca']) {
+                        sshagent(['SSH_KEY']) {
                             sh '''
                                 ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
                                 'sudo rm -rf ${DESTINATION_FOLDER}/*'
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sshagent(['78c238e3-0e4f-4ce2-8acd-cfdc3c4f68ca']) {
+                        sshagent(['SSH_KEY']) {
                             sh """
                                 ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
                                 'aws s3 cp s3://${S3_BUCKET}/ ${DESTINATION_FOLDER}/ --recursive'
@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sshagent(['78c238e3-0e4f-4ce2-8acd-cfdc3c4f68ca']) {
+                        sshagent(['SSH_KEY']) {
                             sh """
                                 ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
                                 'sudo pm2 restart all'

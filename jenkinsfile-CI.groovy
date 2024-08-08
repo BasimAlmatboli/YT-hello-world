@@ -6,9 +6,9 @@ pipeline {
     }
     
     environment {
-        AWS_REGION = 'eu-north-1'
-        S3_BUCKET = 'test-project-for-jenkins'
-        CODEBUILD_PROJECT = 'test'
+        AWS_REGION = ${env.AWS_REGION}
+        S3_BUCKET = ${env.S3_BUCKET}
+        CODEBUILD_PROJECT = ${env.CODEBUILD_PROJECT}
     }
     
     stages {
@@ -17,6 +17,7 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/BasimAlmatboli/YT-hello-world.git'
             }
         }
+
         /*
          stage('Clean Up S3 Bucket') {
             steps {

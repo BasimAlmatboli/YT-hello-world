@@ -41,7 +41,7 @@ pipeline {
                         sshagent(['SSH_KEY']) {
                             sh """
                                 ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
-                                'aws s3 cp s3://${S3_BUCKET}/ ${DESTINATION_FOLDER}/ --recursive'
+                                'sudo aws s3 cp s3://${S3_BUCKET}/ ${DESTINATION_FOLDER}/ --recursive'
                             """
                         }
                         echo 'Data copied from S3 to the destination folder successfully.'

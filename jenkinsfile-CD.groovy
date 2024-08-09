@@ -4,7 +4,7 @@ pipeline {
     environment {
         SSH_KEY = credentials('SSH_KEY')
         S3_BUCKET = credentials('S3_BUCKET')
-        DESTINATION_FOLDER = credentials('DESTINATION_FOLDER')
+        DESTINATION_FOLDER = '/home/Beso'
         EC2_INSTANCE_PRIVATE_IP = credentials('EC2_INSTANCE_PRIVATE_IP')
     }
 

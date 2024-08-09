@@ -33,7 +33,7 @@ pipeline {
             }
         }
 
-        /*
+        
         stage('Copy Data from S3') {
             steps {
                 script {
@@ -52,7 +52,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('Restart Process with PM2') {
             steps {
                 script {

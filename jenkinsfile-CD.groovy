@@ -39,10 +39,10 @@ pipeline {
                 script {
                     try {
                         sshagent(['SSH_KEY']) {
-                            sh """
+                            sh '''
                                 ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
                                 'sudo aws s3 cp s3://${S3_BUCKET}/ ${DESTINATION_FOLDER}/ --recursive'
-                            """
+                            '''
                         }
                         echo 'Data copied from S3 to the destination folder successfully.'
                     } catch (Exception e) {
@@ -52,16 +52,17 @@ pipeline {
                 }
             }
         }
+
 /*
         stage('Restart Process with PM2') {
             steps {
                 script {
                     try {
                         sshagent(['SSH_KEY']) {
-                            sh """
+                            sh '''
                                 ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
                                 'sudo pm2 restart all'
-                            """
+                            '''
                         }
                         echo 'Process restarted successfully with PM2.'
                     } catch (Exception e) {
@@ -71,7 +72,6 @@ pipeline {
                 }
             }
         }*/
-
 
         
     } 

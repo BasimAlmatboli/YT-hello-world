@@ -15,8 +15,13 @@ pipeline {
                     try {
                         sshagent(['SSH_KEY']) {
                             sh '''
-                                ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
-                                'sudo rm -rf ${DESTINATION_FOLDER}/*'
+                                if [[ "$DESTINATION_FOLDER" != "/" && "$DESTINATION_FOLDER" != "" ]]; then
+                                    ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
+                                    "sudo rm -rf ${DESTINATION_FOLDER}/*"
+                                else
+                                    echo "Error: DESTINATION_FOLDER is set to root or empty, aborting cleanup."
+                                    exit 1
+                                fi
                             '''
                         }
                         echo 'Destination folder cleaned successfully.'

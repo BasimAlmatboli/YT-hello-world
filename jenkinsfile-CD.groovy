@@ -9,12 +9,24 @@ pipeline {
     }
 
     stages {
-        stage('Manual Approval') {
+        stage('Send Approval Request') {
             steps {
                 script {
-                    input message: 'Do you want to proceed with the deployment?', ok: 'Approve'
-                    echo 'Approval received. Proceeding with the deployment.'
+                    emailext (
+                        subject: 'Approval Required: Deploy to Production',
+                        body: '''<p>Deployment is ready for production. Please approve or reject the deployment:</p>
+                                 <p><a href="https://jenkins.topproz.com/blue/organizations/jenkins/pipelines</a></p>,
+                        to: 'bsoomee.2011@gmail.com'
+                    )
+                    echo 'Approval request sent via email.'
                 }
+            }
+        }
+        
+        stage('Approval') {
+            steps {
+                input message: 'Deployment approval required', ok: 'Approve', timeout: 1*60*60, timeoutMessage: 'Approval timed out'
+                echo 'Approval received. Proceeding with the deployment.'
             }
         }
 
@@ -23,22 +35,22 @@ pipeline {
                 script {
                     try {
                         sshagent(['SSH_KEY']) {
-                            sh '''
-                                if [[ "$DESTINATION_FOLDER" != "/" && "$DESTINATION_FOLDER" != "" ]]; then
-                                    ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
-                                    "echo 'Cleaning destination folder: ${DESTINATION_FOLDER}' && \
-                                    sudo rm -rf ${DESTINATION_FOLDER}/*"
-                                else
-                                    echo "Error: DESTINATION_FOLDER is set to root or empty, aborting cleanup."
-                                    exit 1
-                                fi
-                            '''
+                        sh '''
+                            if [[ "$DESTINATION_FOLDER" != "/" && "$DESTINATION_FOLDER" != "" ]]; then
+                                ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
+                                "echo 'Cleaning destination folder: ${DESTINATION_FOLDER}' && \
+                                 sudo rm -rf ${DESTINATION_FOLDER}/*"
+                            else
+                                echo "Error: DESTINATION_FOLDER is set to root or empty, aborting cleanup."
+                                exit 1
+                            fi
+                        '''
                         }
                         echo 'Destination folder cleaned successfully.'
                     }
                     catch (Exception e) {
                         echo 'Error cleaning destination folder.'
-                        error("Failed to clean the destination folder on EC2 instance. Please check the SSH connection or the folder path.")
+                        error("Failed to clean the destination folder on EC2 instance. Please check the SSH connection Or the folder path.")
                     }
                 }
             }
@@ -62,9 +74,9 @@ pipeline {
                 }
             }
         }
-
-
-        /* 
+        
+        // Uncomment if needed
+        /*
         stage('Restart Process with PM2') {
             steps {
                 script {
@@ -82,9 +94,8 @@ pipeline {
                     }
                 }
             }
-        } */
-
-        
+        }
+        */
     }
 
     post {

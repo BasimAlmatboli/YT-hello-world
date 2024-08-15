@@ -62,7 +62,9 @@ pipeline {
                 }
             }
         }
-        
+
+
+        /* 
         stage('Restart Process with PM2') {
             steps {
                 script {
@@ -80,7 +82,9 @@ pipeline {
                     }
                 }
             }
-        }
+        } */
+
+        
     }
 
     post {

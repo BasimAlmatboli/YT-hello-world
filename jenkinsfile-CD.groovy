@@ -9,6 +9,15 @@ pipeline {
     }
 
     stages {
+        stage('Manual Approval') {
+            steps {
+                script {
+                    input message: 'Do you want to proceed with the deployment?', ok: 'Approve'
+                    echo 'Approval received. Proceeding with the deployment.'
+                }
+            }
+        }
+
         stage('Clean Destination Folder') {
             steps {
                 script {
@@ -17,7 +26,8 @@ pipeline {
                             sh '''
                                 if [[ "$DESTINATION_FOLDER" != "/" && "$DESTINATION_FOLDER" != "" ]]; then
                                     ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_PRIVATE_IP} \
-                                    "sudo rm -rf ${DESTINATION_FOLDER}/*"
+                                    "echo 'Cleaning destination folder: ${DESTINATION_FOLDER}' && \
+                                    sudo rm -rf ${DESTINATION_FOLDER}/*"
                                 else
                                     echo "Error: DESTINATION_FOLDER is set to root or empty, aborting cleanup."
                                     exit 1
@@ -25,14 +35,14 @@ pipeline {
                             '''
                         }
                         echo 'Destination folder cleaned successfully.'
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         echo 'Error cleaning destination folder.'
-                        error("Failed to clean the destination folder on EC2 instance. Please check the SSH connection and the folder path.")
+                        error("Failed to clean the destination folder on EC2 instance. Please check the SSH connection or the folder path.")
                     }
                 }
             }
         }
-
         
         stage('Copy Data from S3') {
             steps {
@@ -52,8 +62,7 @@ pipeline {
                 }
             }
         }
-
-/*
+        
         stage('Restart Process with PM2') {
             steps {
                 script {
@@ -71,10 +80,8 @@ pipeline {
                     }
                 }
             }
-        }*/
-
-        
-    } 
+        }
+    }
 
     post {
         failure {
@@ -85,4 +92,3 @@ pipeline {
         }
     }
 }
-

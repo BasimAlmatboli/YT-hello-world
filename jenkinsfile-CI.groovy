@@ -27,7 +27,7 @@ pipeline {
                     sh "aws s3 rm s3://${S3_BUCKET} --recursive" // Delete all files in the S3 
                 }
             }
-        }
+        } */
         
         stage('Build with CodeBuild') {
             steps {
@@ -52,7 +52,7 @@ pipeline {
                     echo "Artifacts Location: ${result.getArtifactsLocation()}"
                 }
             }
-        } */
+        }
 
         stage('Check S3 Bucket') {
             steps {
